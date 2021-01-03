@@ -6,19 +6,21 @@ using UnityEngine;
 public class ResourceManager : MonoBehaviour
 {
     private static ResourceManager _instance;
-
+    public Action OnResourceAmountChanged;
     public static ResourceManager Instance
     {
         get
         {
             if (_instance == null)
             {
-                Debug.Log("Resource Manager is NULL");
+                Debug.LogError("Resource Manager is NULL");
             }
 
             return _instance;
         }
     }
+
+    
     private Dictionary<ResourceTypeSO, int> resourceAmountDictionary;
 
     private void Awake()
@@ -55,6 +57,7 @@ public class ResourceManager : MonoBehaviour
     public void AddResource(ResourceTypeSO resourceType, int amount)
     {
         resourceAmountDictionary[resourceType] += amount;
+        OnResourceAmountChanged?.Invoke();
         TestLogResourceAmountDictionary();
     }
 
@@ -67,5 +70,10 @@ public class ResourceManager : MonoBehaviour
             
             TestLogResourceAmountDictionary();
         }
+    }
+
+    public int GetResourceAmount(ResourceTypeSO resourceType)
+    {
+        return resourceAmountDictionary[resourceType];
     }
 }
